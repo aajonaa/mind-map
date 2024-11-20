@@ -32,6 +32,14 @@ module.exports = {
       })
     }
   },
+  devServer: {
+    https: {
+    key: './localhost.key',
+    cert: './localhost.crt',
+    },
+    host: '0.0.0.0', // Allow access from other devices
+    port: 8088, // Keep the same port
+  },
   configureWebpack: {
     resolve: {
       alias: {
