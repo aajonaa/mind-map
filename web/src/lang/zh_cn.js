@@ -281,6 +281,7 @@ export default {
     saveAs: '另存为',
     import: '导入',
     export: '导出',
+    save: '保存',
     shortcutKey: '快捷键',
     associativeLine: '关联线',
     painter: '格式刷',

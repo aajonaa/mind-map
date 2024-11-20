@@ -26,10 +26,14 @@
       </div>
       <!-- 导出 -->
       <div class="toolbarBlock">
+
+        <!-- Open Directory Button-->
         <div class="toolbarBtn" @click="openDirectory" v-if="!isMobile">
           <span class="icon iconfont icondakai"></span>
           <span class="text">{{ $t('toolbar.directory') }}</span>
         </div>
+
+        <!-- New File Button -->
         <el-tooltip
           effect="dark"
           :content="$t('toolbar.newFileTip')"
@@ -41,6 +45,8 @@
             <span class="text">{{ $t('toolbar.newFile') }}</span>
           </div>
         </el-tooltip>
+
+        <!-- Open File Button -->
         <el-tooltip
           effect="dark"
           :content="$t('toolbar.openFileTip')"
@@ -52,14 +58,21 @@
             <span class="text">{{ $t('toolbar.openFile') }}</span>
           </div>
         </el-tooltip>
+
+        <!-- Save As Button -->
         <div class="toolbarBtn" @click="saveLocalFile" v-if="!isMobile">
           <span class="icon iconfont iconlingcunwei"></span>
           <span class="text">{{ $t('toolbar.saveAs') }}</span>
         </div>
+
+        <!-- Import Buttons -->
         <div class="toolbarBtn" @click="$bus.$emit('showImport')">
           <span class="icon iconfont icondaoru"></span>
           <span class="text">{{ $t('toolbar.import') }}</span>
         </div>
+
+        <!-- Export Button -->
+        <!--
         <div
           class="toolbarBtn"
           @click="$bus.$emit('showExport')"
@@ -68,6 +81,29 @@
           <span class="icon iconfont iconexport"></span>
           <span class="text">{{ $t('toolbar.export') }}</span>
         </div>
+        -->
+        <div
+          class="toolbarBtn"
+          @click="$bus.$emit('showExport')"
+        >
+          <span class="icon iconfont iconexport"></span>
+          <span class="text">{{ $t('toolbar.export') }}</span>
+        </div>
+
+        <!-- Save Button -->
+        <div 
+          class="toolbarBtn" 
+          @click="saveFile"
+          style="margin-right: 0;"
+        >
+          <span class="icon iconfont iconlingcunwei"></span>
+          <span class="text">{{ $t('toolbar.save') }}</span>
+        </div>
+
+
+
+
+
         <!-- 本地文件树 -->
         <div
           class="fileTreeBox"
@@ -501,7 +537,45 @@ export default {
         }
         this.$message.warning(this.$t('toolbar.notSupportTip'))
       }
+    },
+
+    async saveFile() {
+      try {
+        // Ensure the file is already opened and a handle exists
+        if (!fileHandle || !this.isHandleLocalFile) {
+          this.$message.warning(this.$t('toolbar.noFileOpenTip'));
+          return;
+        }
+
+        // Get the current content (data) that needs to be saved
+        let data = getData();  // Assuming getData() provides the content to be saved
+
+        // If the content is not already in the required format, handle it accordingly
+        if (!this.isFullDataFile) {
+          data = { root: data };  // Wrap content in a root object if it's not already
+        }
+
+        // Convert the content to a string (JSON format)
+        let contentString = JSON.stringify(data);
+
+        // Use the existing file handle to write the updated content
+        const writable = await fileHandle.createWritable();
+        await writable.write(contentString);
+        await writable.close();
+
+        // Notify the user that the file has been saved
+        this.$message.success(this.$t('toolbar.fileSavedSuccessfully'));
+      } catch (error) {
+        console.log(error);
+        // Handle any errors during the file save process
+        if (error.toString().includes('aborted')) {
+          return; // File operation was aborted (user canceled)
+        }
+        this.$message.warning(this.$t('toolbar.notSupportTip'));
+      }
     }
+
+
   }
 }
 </script>

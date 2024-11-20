@@ -281,6 +281,7 @@ export default {
     saveAs: '另存新檔',
     import: '匯入',
     export: '匯出',
+    save: '儲存',
     shortcutKey: '快速鍵',
     associativeLine: '關聯線',
     painter: '格式刷',

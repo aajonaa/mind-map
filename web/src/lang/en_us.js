@@ -286,6 +286,7 @@ export default {
     saveAs: 'Save as',
     import: 'Import',
     export: 'Export',
+    save: 'Save',
     shortcutKey: 'Shortcut key',
     associativeLine: 'Associative line',
     painter: 'Painter',
